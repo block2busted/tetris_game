@@ -38,7 +38,7 @@ export default class Game {
     movePieceLeft() {
         this.activePiece.x -=1;
 
-        if (this.isPieceOutOfBounds()) {
+        if (this.hasCollision()) {
             this.activePiece.x += 1;
         }
     };
@@ -46,7 +46,7 @@ export default class Game {
     movePieceRight() {
         this.activePiece.x +=1;
 
-        if (this.isPieceOutOfBounds()) {
+        if (this.hasCollision()) {
             this.activePiece.x -= 1;
         }
     };
@@ -54,17 +54,29 @@ export default class Game {
     movePieceDown() {
         this.activePiece.y +=1;
 
-        if (this.isPieceOutOfBounds()) {
+        if (this.hasCollision()) {
             this.activePiece.y -= 1;
             this.lockPiece();
         }
     };
 
-    isPieceOutOfBounds() {
-        const playfield = this.playfield;
-        const { y, x } = this.activePiece;
+    hasCollision() {
+        const { y: pieceY, x: pieceX, blocks } = this.activePiece;
 
-        return playfield[y] === undefined || playfield[y][x] === undefined;
+         for (let y = 0; y < blocks.length; y++) {
+            for (let x = 0; x < blocks[y].length; x++) {
+                if (
+                    blocks[y][x] &&
+                    ((this.playfield[pieceY + y] === undefined || this.playfield[pieceY + y][pieceX + x] === undefined) ||
+                    this.playfield[pieceY + y][pieceX + x])
+                ) {
+                    return true;
+                }
+
+            }
+        }
+
+        return false;
     };
 
     lockPiece() {
@@ -72,7 +84,10 @@ export default class Game {
 
         for (let y = 0; y < blocks.length; y++) {
             for (let x = 0; x < blocks[y].length; x++) {
-                this.playfield[pieceY + y][pieceX + x] = blocks[y][x]
+                if (blocks[y][x]) {
+                    this.playfield[pieceY + y][pieceX + x] = blocks[y][x]
+                    console.log('Locked!')
+                }
             }
         }
     }
