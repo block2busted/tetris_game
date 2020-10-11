@@ -5,7 +5,7 @@ body {
 .cell {
     width: 30px;
     height: 30px;
-    border: gray solid 1px;
+    border: #808080 solid 1px;
     display: inline-block;
 }
 
@@ -17,7 +17,7 @@ body {
     background-color: blue;
 }
 
-.game-body {
+#root {
     background-color: brown;
     width: 640px;
     height: 640px;
@@ -43,4 +43,11 @@ body {
 
 .player-name h2 {
     font-size: 30px;
+}
+
+#game-block {
+    background-color: aqua;
+    width: 320px;
+    height: 640px;
+    margin-right: auto;
 }
