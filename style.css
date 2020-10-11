@@ -1,13 +1,5 @@
 body {
-    background-color: darkred;
-}
-
-.main {
-    width: 320px;
-    height: 620px;
-    border: black solid 2px;
-    margin: auto;
-    font-size: 0;
+    background-color: lightgray;
 }
 
 .cell {
