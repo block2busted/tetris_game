@@ -1,0 +1,54 @@
+body {
+    background-color: darkred;
+}
+
+.main {
+    width: 320px;
+    height: 620px;
+    border: black solid 2px;
+    margin: auto;
+    font-size: 0;
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    border: gray solid 1px;
+    display: inline-block;
+}
+
+.moving-cell {
+    background-color: black;
+}
+
+.fixed-cell {
+    background-color: blue;
+}
+
+.game-body {
+    background-color: brown;
+    width: 640px;
+    height: 640px;
+    border: grey solid 1px;
+    margin: auto;
+}
+
+.next-figure-block {
+    background-color: black;
+    width: 300px;
+    height: 300px;
+    border: blue solid 1px;
+    margin-right: auto;
+    margin-top: 20px;
+    padding-top: 20px;
+}
+
+.player-details {
+    width: 300px;
+    height: 200px;
+    background-color: blue;
+}
+
+.player-name h2 {
+    font-size: 30px;
+}
