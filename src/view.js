@@ -1,4 +1,14 @@
 export default class View {
+    colors = {
+        '1': 'cyan',
+        '2': 'blue',
+        '3': 'orange',
+        '4': 'yellow',
+        '5': 'green',
+        '6': 'purple',
+        '7': 'red'
+    }
+
     constructor(element, width, height, rows, columns) {
         this.element = element;
         this.width = width;
@@ -15,12 +25,6 @@ export default class View {
         this.element.appendChild(this.canvas)
     }
 
-    render(playfield) {
-        console.log(playfield, 'render')
-        this.clearScreen();
-        this.renderPlayfield(playfield);
-    }
-
     clearScreen() {
         this.context.clearRect(0, 0, this.width, this.height);
     }
@@ -28,23 +32,33 @@ export default class View {
     renderPlayfield(playfield) {
         for (let y = 0; 0 < playfield.length; y++) {
             const line = playfield[y];
-            console.log(line, y)
+
+            if (y===20) {
+                break;
+            }
+
             for (let x = 0; x < line.length; x++) {
                 const block = line[x];
 
                 if (block) {
-                    this.context.fillStyle = 'red';
-                    this.context.strokeStyle = 'black';
-                    this.context.lineWidth = 2;
-
-                    this.context.fillRect(
+                    this.renderBlock(
                         x * this.blockWidth,
                         y * this.blockHeight,
                         this.blockWidth,
-                        this.blockHeight
+                        this.blockHeight,
+                        this.colors[block]
                     );
                 }
             }
         }
+    };
+
+    renderBlock(x, y, width, height, color) {
+        this.context.fillStyle = color;
+        this.context.strokeStyle = 'black';
+        this.context.lineWidth = 2;
+
+        this.context.fillRect(x, y, width, height);
+        this.context.strokeRect(x, y, width, height)
     }
 }

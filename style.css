@@ -1,53 +1,16 @@
 body {
-    background-color: lightgray;
-}
-
-.cell {
-    width: 30px;
-    height: 30px;
-    border: #808080 solid 1px;
-    display: inline-block;
-}
-
-.moving-cell {
+    margin: 0;
     background-color: black;
-}
-
-.fixed-cell {
-    background-color: blue;
 }
 
 #root {
-    background-color: brown;
-    width: 640px;
-    height: 640px;
-    border: grey solid 1px;
-    margin: auto;
+    padding: 3rem;
+    text-align: center;
 }
 
-.next-figure-block {
-    background-color: black;
-    width: 300px;
-    height: 300px;
-    border: blue solid 1px;
-    margin-right: auto;
-    margin-top: 20px;
-    padding-top: 20px;
+#root canvas {
+    display: block;
+    margin: 0 auto;
+    border: 4px solid white;
 }
 
-.player-details {
-    width: 300px;
-    height: 200px;
-    background-color: blue;
-}
-
-.player-name h2 {
-    font-size: 30px;
-}
-
-#game-block {
-    background-color: aqua;
-    width: 320px;
-    height: 640px;
-    margin-right: auto;
-}
