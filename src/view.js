@@ -1,3 +1,5 @@
+import Controller from "./controller.js";
+
 export default class View {
     colors = {
         '1': 'cyan',
@@ -15,6 +17,7 @@ export default class View {
         this.height = height;
 
         this.canvas = document.createElement('canvas');
+        this.canvas.setAttribute('id', 'main-canvas')
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         this.context = this.canvas.getContext('2d');
@@ -45,32 +48,72 @@ export default class View {
         this.renderPanel(state)
     };
 
-    renderStartScreen() {
+    renderStartScreen(isPlaying) {
         this.context.fillStyle = 'white';
         this.context.font = '22px "Press start 2P"';
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
 
-        this.context.fillText('Enter your name and press Enter', this.width / 2, this.height /2);
+        this.context.fillText('Enter your name and press Enter', this.width / 2, this.height / 2);
+
+        this.context.fillRect(24, this.height / 2 + 24, 48, 24);
+
+        if (!isPlaying) {
+            let mouseX = this.width / 2;
+            let mouseY = this.height / 2 + 24;
+            const startingX = mouseX;
+            let keyHistory = "";
+
+            this.inputEventListener = () => {
+                let letters = "abcdefghijklmnopqrstuvwxyz";
+                let key = event.keyCode;
+                if (key > 64 && key < 91 || key === 32) {
+                    // todo: add function
+                    keyHistory += event.key
+                    this.context.clearRect(0, mouseY - 11, 600, 500)
+                    this.context.fillText(keyHistory, mouseX, mouseY)
+                } else if (key === 8) {
+                    // todo: add function
+                    keyHistory = keyHistory.slice(0, -1)
+                    this.context.clearRect(0, mouseY - 11, 600, 500)
+                    this.context.fillText(keyHistory, mouseX, mouseY)
+                }
+            }
+
+            document.addEventListener('keyup', this.inputEventListener.bind(this));
+            document.removeEventListener('keyup', this.inputEventListener); // todo: removeEvent
+        }
     };
 
-    renderGameOverScreen({ score }) {
+    renderGameOverScreen({score, records}) {
+        const recordsTableLength = records.length;
+        let recordsTableY = this.height / 2;
+
+        console.log(records);
+
         this.clearScreen();
         this.context.fillStyle = 'white';
         this.context.font = '22px "Press start 2P"';
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
-        this.context.fillText('GAME OVER', this.width / 2, this.height /2 - 48);
-        this.context.fillText(`Score ${score}`, this.width / 2, this.height /2);
-        this.context.fillText(`Scores table:`, this.width / 2, this.height /2 +48);
-        this.context.fillText(`Press ENTER to restart.`, this.width / 2, this.height /2 + 72);
+
+        this.context.fillText('GAME OVER', this.width / 2, this.height / 2 - 96);
+        this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2 - 72);
+        this.context.fillText(`Name's records`, this.width / 2, this.height / 2 - 24);
+        for (let i = 0; i < recordsTableLength; i++) {
+
+            this.context.fillText(`${i + 1}. ${records[i].score}`, this.width / 2, recordsTableY);
+            recordsTableY += 24;
+        }
+
+        this.context.fillText(`Press ENTER to restart.`, this.width / 2, recordsTableY + 24);
     };
 
-    renderPlayfield({ playfield }) {
+    renderPlayfield({playfield}) {
         for (let y = 0; 0 < playfield.length; y++) {
             const line = playfield[y];
 
-            if (y===20) {
+            if (y === 20) {
                 break;
             }
 
@@ -95,7 +138,7 @@ export default class View {
         this.context.strokeRect(0, 0, this.playfieldWidth, this.playfieldHeigth);
     };
 
-    renderPanel({ level, score, player, nextPiece }) {
+    renderPanel({level, score, player, nextPiece}) {
         this.context.textAlign = 'start';
         this.context.textBaseline = 'top';
         this.context.fillStyle = 'white';
@@ -106,8 +149,8 @@ export default class View {
         this.context.fillText(`Score: ${score}`, this.panelX, this.panelY + 40)
         this.context.fillText("Next", this.panelX, this.panelY + 96)
 
-        for (let y=0; y < nextPiece.blocks.length; y++) {
-            for (let x=0; x < nextPiece.blocks[y].length; x++) {
+        for (let y = 0; y < nextPiece.blocks.length; y++) {
+            for (let x = 0; x < nextPiece.blocks[y].length; x++) {
                 const block = nextPiece.blocks[y][x];
                 if (block) {
                     this.renderBlock(

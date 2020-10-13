@@ -8,8 +8,14 @@ body {
     text-align: center;
 }
 
-#root canvas {
+#main-canvas {
     display: block;
     margin: 0 auto;
 }
 
+.canvas-input {
+    background-color: whitesmoke;
+    position: absolute;
+    margin: auto;
+
+}

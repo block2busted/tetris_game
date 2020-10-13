@@ -41,17 +41,39 @@ export default class Game {
             score: this.score,
             level: this.level,
             lines: this.lines,
+            records: this.records,
             nextPiece: this.nextPiece,
             playfield,
-            isGameOver: this.topOut
+            isGameOver: this.isGameOver
         }
+    };
+
+    sortRecords(records) {
+
+    };
+
+    updateRecords() {
+        const newValue = {
+            id: this.records.length + 1,
+            score: this.score
+        }
+        const newRecords = [
+            ...this.records,
+            newValue
+        ]
+
+        newRecords.sort((a, b) => {
+            return b.score - a.score
+        });
+
+        this.records = newRecords;
     };
 
     reset() {
         this.player = 'Fili2p'
-        this.lines = 0;
+        this.lines = 222222;
         this.score = 0;
-        this.topOut = false;
+        this.isGameOver = false;
         this.playfield = this.createPlayfield();
         this.activePiece = this.createPeace();
         this.nextPiece = this.createPeace();
@@ -153,9 +175,7 @@ export default class Game {
     };
 
     movePieceDown() {
-        if (this.topOut) {
-            return
-        }
+        if (this.isGameOver) return;
 
         this.activePiece.y += 1;
 
@@ -168,7 +188,7 @@ export default class Game {
         }
 
         if (this.hasCollision()) {
-            this.topOut = true;
+            this.isGameOver = true;
         }
     };
 
@@ -260,7 +280,7 @@ export default class Game {
             this.score += Game.points[countClearedLines] * (this.level + 1);
             this.lines += countClearedLines;
         }
-    }
+    };
 
     updatePieces() {
         this.activePiece = this.nextPiece;

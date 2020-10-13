@@ -3,11 +3,12 @@ export default class Controller {
         this.game = game;
         this.view = view;
         this.isPlaying = false;
-        document.addEventListener('keydown', this.handleKeyDown.bind(this));
-        document.addEventListener('keydown', this.handleKeyUp.bind(this));
-        this.view.renderStartScreen();
-    };
+        this.intervalId = null;
 
+        document.addEventListener('keydown', this.handleKeyDown.bind(this));
+        document.addEventListener('keyup', this.handleKeyUp.bind(this));
+        this.view.renderStartScreen(this.isPlaying);
+    };
 
     update() {
         this.game.movePieceDown();
@@ -20,34 +21,37 @@ export default class Controller {
         this.updateView();
     };
 
-    pause() {
-        this.isPlaying = false;
-        this.stopTimer();
-        this.updateView();
-    };
-
     updateView() {
         const state = this.game.getState();
         if (state.isGameOver) {
-            this.view.renderGameOverScreen(state);
+            this.isPlaying = false;
+            this.stopTimer();
+            this.game.updateRecords();
+            this.view.renderGameOverScreen(this.game.getState());
         } else if (!this.isPlaying) {
-            this.view.renderStartScreen();
+            this.view.renderStartScreen(this.isPlaying);
         } else {
             this.view.renderMainScreen(this.game.getState());
         }
     };
 
+    reset() {
+        this.game.reset();
+        this.play();
+    };
+
     startTimer() {
-        const speed = 1000 - this.game.getState().level * 100;
+        const speed = 1000 - this.game.getState().level * 100
+
         if (!this.intervalId) {
             this.intervalId = setInterval(() => {
                 this.update();
-            }, speed > 0 ? speed : 100);
+            }, speed > 0 ? speed : 100)
         }
     };
 
     stopTimer() {
-        if ( this.intervalId) {
+        if (this.intervalId) {
             clearInterval(this.intervalId);
             this.intervalId = null;
         }
@@ -59,41 +63,50 @@ export default class Controller {
         switch (event.keyCode) {
             case 13: // Enter key
                 if (state.isGameOver) {
-                    this.game.reset();
-                    break;
-                } else if (this.isPlaying) {
-                    this.pause();
-                    break;
+                    this.reset()
                 } else {
-                    this.view.renderMainScreen(this.game.getState());
                     this.play();
+                }
+                this.view.renderMainScreen(this.game.getState());
+                break;
+            case 37: // left-arrow key
+                if (this.isPlaying) {
+                    this.game.movePieceLeft();
+                    this.updateView();
                     break;
                 }
-            case 37: // left-arrow key
-                this.game.movePieceLeft();
-                this.updateView();
                 break;
             case 38: // up-arrow key;
-                this.game.rotatePiece();
-                this.updateView();
+                if (this.isPlaying) {
+                    this.game.rotatePiece();
+                    this.updateView();
+                    break;
+                }
                 break;
             case 39: // right-arrow key;
-                this.game.movePieceRight();
-                this.updateView();
+                if (this.isPlaying) {
+                    this.game.movePieceRight();
+                    this.updateView();
+                    break;
+                }
                 break;
             case 40: // down-arrow key;
-                this.stopTimer();
-                this.game.movePieceDown();
-                this.updateView();
-                break;
+                if (this.isPlaying) {
+                    this.stopTimer();
+                    this.game.movePieceDown();
+                    this.updateView();
+                    break;
+                }
         }
     };
 
     handleKeyUp(event) {
         switch (event.keyCode) {
             case 40:
-                this.startTimer();
-                break;
+                if (this.isPlaying) {
+                    this.startTimer();
+                    break;
+                }
         }
     };
 }
