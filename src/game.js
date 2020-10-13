@@ -70,8 +70,8 @@ export default class Game {
     };
 
     reset() {
-        this.player = 'Fili2p'
-        this.lines = 222222;
+        this.player = '' // todo move name from views.js here!
+        this.lines = 0;
         this.score = 0;
         this.isGameOver = false;
         this.playfield = this.createPlayfield();
@@ -229,7 +229,6 @@ export default class Game {
 
             }
         }
-
         return false;
     };
 

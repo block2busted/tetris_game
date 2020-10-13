@@ -7,6 +7,9 @@ export default class Controller {
 
         document.addEventListener('keydown', this.handleKeyDown.bind(this));
         document.addEventListener('keyup', this.handleKeyUp.bind(this));
+
+        document.addEventListener('keyup', this.view.inputHandler);
+
         this.view.renderStartScreen(this.isPlaying);
     };
 
@@ -29,7 +32,8 @@ export default class Controller {
             this.game.updateRecords();
             this.view.renderGameOverScreen(this.game.getState());
         } else if (!this.isPlaying) {
-            this.view.renderStartScreen(this.isPlaying);
+            console.log(this.game.getState())
+            this.view.renderStartScreen(this.game.getState());
         } else {
             this.view.renderMainScreen(this.game.getState());
         }
@@ -67,6 +71,7 @@ export default class Controller {
                 } else {
                     this.play();
                 }
+                document.removeEventListener('keyup', this.view.inputHandler);
                 this.view.renderMainScreen(this.game.getState());
                 break;
             case 37: // left-arrow key

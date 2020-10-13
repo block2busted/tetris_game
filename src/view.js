@@ -1,5 +1,3 @@
-import Controller from "./controller.js";
-
 export default class View {
     colors = {
         '1': 'cyan',
@@ -10,6 +8,8 @@ export default class View {
         '6': 'purple',
         '7': 'red'
     }
+
+    player = ''
 
     constructor(element, width, height, rows, columns) {
         this.element = element;
@@ -38,9 +38,8 @@ export default class View {
         this.panelWidth = this.width / 3;
         this.panelHeigth = this.height;
 
-
         this.element.appendChild(this.canvas)
-    }
+    };
 
     renderMainScreen(state) {
         this.clearScreen();
@@ -48,7 +47,7 @@ export default class View {
         this.renderPanel(state)
     };
 
-    renderStartScreen(isPlaying) {
+    renderStartScreen() {
         this.context.fillStyle = 'white';
         this.context.font = '22px "Press start 2P"';
         this.context.textAlign = 'center';
@@ -56,41 +55,28 @@ export default class View {
 
         this.context.fillText('Enter your name and press Enter', this.width / 2, this.height / 2);
 
-        this.context.fillRect(24, this.height / 2 + 24, 48, 24);
+    };
 
-        if (!isPlaying) {
-            let mouseX = this.width / 2;
-            let mouseY = this.height / 2 + 24;
-            const startingX = mouseX;
-            let keyHistory = "";
-
-            this.inputEventListener = () => {
-                let letters = "abcdefghijklmnopqrstuvwxyz";
-                let key = event.keyCode;
-                if (key > 64 && key < 91 || key === 32) {
-                    // todo: add function
-                    keyHistory += event.key
-                    this.context.clearRect(0, mouseY - 11, 600, 500)
-                    this.context.fillText(keyHistory, mouseX, mouseY)
-                } else if (key === 8) {
-                    // todo: add function
-                    keyHistory = keyHistory.slice(0, -1)
-                    this.context.clearRect(0, mouseY - 11, 600, 500)
-                    this.context.fillText(keyHistory, mouseX, mouseY)
-                }
-            }
-
-            document.addEventListener('keyup', this.inputEventListener.bind(this));
-            document.removeEventListener('keyup', this.inputEventListener); // todo: removeEvent
+    inputEvent = function (event) {
+        let mouseX = this.width / 2;
+        let mouseY = this.height / 2 + 24;
+        let key = event.keyCode;
+        if (key > 64 && key < 91 || key === 32) {
+            this.player += event.key
+            this.context.clearRect(0, mouseY - 12, 600, 500)
+            this.context.fillText(this.player, mouseX, mouseY)
+        } else if (key === 8) {
+            this.player = keyHistory.slice(0, -1)
+            this.context.clearRect(0, mouseY - 12, 600, 500)
+            this.context.fillText(this.player, mouseX, mouseY)
         }
     };
+
+    inputHandler = this.inputEvent.bind(this);
 
     renderGameOverScreen({score, records}) {
         const recordsTableLength = records.length;
         let recordsTableY = this.height / 2;
-
-        console.log(records);
-
         this.clearScreen();
         this.context.fillStyle = 'white';
         this.context.font = '22px "Press start 2P"';
@@ -99,9 +85,8 @@ export default class View {
 
         this.context.fillText('GAME OVER', this.width / 2, this.height / 2 - 96);
         this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2 - 72);
-        this.context.fillText(`Name's records`, this.width / 2, this.height / 2 - 24);
+        this.context.fillText(`${this.player}'s records`, this.width / 2, this.height / 2 - 24);
         for (let i = 0; i < recordsTableLength; i++) {
-
             this.context.fillText(`${i + 1}. ${records[i].score}`, this.width / 2, recordsTableY);
             recordsTableY += 24;
         }
@@ -144,7 +129,7 @@ export default class View {
         this.context.fillStyle = 'white';
         this.context.font = '18px "Press start 2P"';
 
-        this.context.fillText(`Player: ${player}`, this.panelX, this.panelY)
+        this.context.fillText(`Player: ${this.player}`, this.panelX, this.panelY)
         this.context.fillText(`Level: ${level}`, this.panelX, this.panelY + 20)
         this.context.fillText(`Score: ${score}`, this.panelX, this.panelY + 40)
         this.context.fillText("Next", this.panelX, this.panelY + 96)
