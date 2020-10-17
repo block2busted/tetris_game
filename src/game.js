@@ -37,7 +37,6 @@ export default class Game {
         }
 
         return {
-            player: this.player,
             score: this.score,
             level: this.level,
             lines: this.lines,
