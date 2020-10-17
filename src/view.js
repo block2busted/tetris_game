@@ -57,7 +57,7 @@ export default class View {
 
     };
 
-    inputEvent = function (event) {
+    inputHandler = (event) => {
         let mouseX = this.width / 2;
         let mouseY = this.height / 2 + 24;
         let key = event.keyCode;
@@ -71,8 +71,6 @@ export default class View {
             this.context.fillText(this.player, mouseX, mouseY)
         }
     };
-
-    inputHandler = this.inputEvent.bind(this);
 
     renderGameOverScreen({score, records}) {
         const recordsTableLength = records.length;
@@ -95,18 +93,12 @@ export default class View {
     };
 
     renderPlayfield({playfield}) {
-        for (let y = 0; 0 < playfield.length; y++) {
+        for (let y = 0; y < playfield.length; y++) {
             const line = playfield[y];
-
-            if (y === 20) {
-                break;
-            }
 
             for (let x = 0; x < line.length; x++) {
                 const block = line[x];
-
                 if (block) {
-
                     this.renderBlock(
                         (x * this.blockWidth) + this.playfieldX,
                         (y * this.blockHeight) + this.playfieldY,
@@ -123,7 +115,7 @@ export default class View {
         this.context.strokeRect(0, 0, this.playfieldWidth, this.playfieldHeigth);
     };
 
-    renderPanel({level, score, player, nextPiece}) {
+    renderPanel({level, score, nextPiece}) {
         this.context.textAlign = 'start';
         this.context.textBaseline = 'top';
         this.context.fillStyle = 'white';
