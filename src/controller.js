@@ -29,11 +29,8 @@ export default class Controller {
         if (state.isGameOver) {
             this.isPlaying = false;
             this.stopTimer();
-            this.game.updateRecords();
+            this.game.updateRecords(this.view.player);
             this.view.renderGameOverScreen(this.game.getState());
-        } else if (!this.isPlaying) {
-            console.log(this.game.getState())
-            this.view.renderStartScreen(this.game.getState());
         } else {
             this.view.renderMainScreen(this.game.getState());
         }

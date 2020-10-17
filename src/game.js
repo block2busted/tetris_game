@@ -48,13 +48,9 @@ export default class Game {
         }
     };
 
-    sortRecords(records) {
-
-    };
-
-    updateRecords() {
+    updateRecords(player) {
         const newValue = {
-            id: this.records.length + 1,
+            player: player,
             score: this.score
         }
         const newRecords = [
@@ -70,7 +66,6 @@ export default class Game {
     };
 
     reset() {
-        this.player = '' // todo move name from views.js here!
         this.lines = 0;
         this.score = 0;
         this.isGameOver = false;
@@ -226,7 +221,6 @@ export default class Game {
                 ) {
                     return true;
                 }
-
             }
         }
         return false;

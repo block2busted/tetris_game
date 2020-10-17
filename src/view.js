@@ -53,28 +53,26 @@ export default class View {
         this.context.textAlign = 'center';
         this.context.textBaseline = 'middle';
 
-        this.context.fillText('Enter your name and press Enter', this.width / 2, this.height / 2);
+        this.context.fillText('Enter your name and press Enter', this.width / 2, this.height / 2 - 48);
 
     };
 
-    inputHandler = (event) => {
-        let mouseX = this.width / 2;
-        let mouseY = this.height / 2 + 24;
+    inputHandler = () => {
+        let widthX = this.width / 2;
+        let heightY = this.height / 2;
         let key = event.keyCode;
         if (key > 64 && key < 91 || key === 32) {
             this.player += event.key
-            this.context.clearRect(0, mouseY - 12, 600, 500)
-            this.context.fillText(this.player, mouseX, mouseY)
+            this.context.clearRect(0, heightY - 36, 600, 24)
+            this.context.fillText(this.player, widthX, heightY - 24)
         } else if (key === 8) {
-            this.player = keyHistory.slice(0, -1)
-            this.context.clearRect(0, mouseY - 12, 600, 500)
-            this.context.fillText(this.player, mouseX, mouseY)
+            this.player = this.player.slice(0, -1)
+            this.context.clearRect(0, heightY - 36, 600, 24)
+            this.context.fillText(this.player, widthX, heightY - 24)
         }
     };
 
     renderGameOverScreen({score, records}) {
-        const recordsTableLength = records.length;
-        let recordsTableY = this.height / 2;
         this.clearScreen();
         this.context.fillStyle = 'white';
         this.context.font = '22px "Press start 2P"';
@@ -83,14 +81,25 @@ export default class View {
 
         this.context.fillText('GAME OVER', this.width / 2, this.height / 2 - 96);
         this.context.fillText(`Score: ${score}`, this.width / 2, this.height / 2 - 72);
-        this.context.fillText(`${this.player}'s records`, this.width / 2, this.height / 2 - 24);
+        document.addEventListener('keyup', this.inputHandler);
+        this.player = '';
+        this.renderInputNameScreen(records);
+    };
+
+    renderInputNameScreen(records) {
+        const recordsTableLength = records.length;
+        let recordsTableY = this.height / 2 + 24;
+        this.context.fillText(`Input you name and press ENTER`, this.width / 2, this.height / 2 - 48);
+
+        this.context.fillText(`Records`, this.width / 2, recordsTableY);
+        recordsTableY += 24;
         for (let i = 0; i < recordsTableLength; i++) {
-            this.context.fillText(`${i + 1}. ${records[i].score}`, this.width / 2, recordsTableY);
+            this.context.fillText(`${i + 1}. ${records[i].player}: ${records[i].score}`, this.width / 2, recordsTableY);
             recordsTableY += 24;
         }
 
-        this.context.fillText(`Press ENTER to restart.`, this.width / 2, recordsTableY + 24);
-    };
+
+    }
 
     renderPlayfield({playfield}) {
         for (let y = 0; y < playfield.length; y++) {
